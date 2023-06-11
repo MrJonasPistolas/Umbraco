@@ -1,0 +1,40 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var homePage = Umbraco.AssignedContentItem.AncestorOrSelf<HomePage>();
+    var year = DateTime.Now.Year;
+    var copyright = String.Format(Umbraco.GetDictionaryValue("Master.Footer.Copyright"), year);
+}
+
+<footer class="footer-area p_120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6 class="footer_title">@Umbraco.GetDictionaryValue("Master.Footer.AboutUs")</h6>
+                    @homePage.AboutUs
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="single-footer-widget f_social_wd">
+                    <h6 class="footer_title">@Umbraco.GetDictionaryValue("Master.Footer.FollowUs")</h6>
+                    <p>@Umbraco.GetDictionaryValue("Master.Footer.LetsBeSocial")</p>
+                    @if (homePage.SocialMedia != null && homePage.SocialMedia.Any())
+                    {
+                        <div class="f_social">
+                            @foreach (var link in homePage.SocialMedia)
+                            {
+                                <a href="@link.Url" target="@link.Target"><i class="@link.Name"></i></a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row footer-bottom d-flex justify-content-between align-items-center">
+            <p class="col-lg-12 footer-text text-center">
+                @copyright
+            </p>
+        </div>
+    </div>
+</footer>

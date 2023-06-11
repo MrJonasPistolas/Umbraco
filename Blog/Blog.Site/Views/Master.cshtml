@@ -1,0 +1,27 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+	var language = Model.GetCultureFromDomains();
+	var lang = language.Split('-')[0];
+}
+
+<!doctype html>
+<html lang="@lang">
+	<head>
+		@await Html.PartialAsync("~/Views/Partials/metaData.cshtml")
+		@await Html.PartialAsync("~/Views/Partials/styles.cshtml")
+	</head>
+	<body>
+		@await Html.PartialAsync("~/Views/Partials/header.cshtml")
+		@await Html.PartialAsync("~/Views/Partials/banner.cshtml")
+
+		<section class="blog_area p_120">
+			<div class="container">
+				@RenderBody()
+			</div>
+		</section>
+
+		@await Html.PartialAsync("~/Views/Partials/footer.cshtml")
+		@await Html.PartialAsync("~/Views/Partials/scripts.cshtml")
+	</body>
+</html>
