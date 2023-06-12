@@ -1,18 +1,18 @@
-;(function($){
+; (function ($) {
     "use strict"
-	
-	
-	var nav_offset_top = $('header').height(); 
-    /*-------------------------------------------------------------------------------
-	  Navbar 
-	-------------------------------------------------------------------------------*/
 
-	//* Navbar Fixed  
-    function navbarFixed(){
-        if ( $('.header_area').length ){ 
-            $(window).scroll(function() {
-                var scroll = $(window).scrollTop();   
-                if (scroll >= nav_offset_top ) {
+
+    var nav_offset_top = $('header').height();
+    /*-------------------------------------------------------------------------------
+      Navbar 
+    -------------------------------------------------------------------------------*/
+
+    //* Navbar Fixed  
+    function navbarFixed() {
+        if ($('.header_area').length) {
+            $(window).scroll(function () {
+                var scroll = $(window).scrollTop();
+                if (scroll >= nav_offset_top) {
                     $(".header_area").addClass("navbar_fixed");
                 } else {
                     $(".header_area").removeClass("navbar_fixed");
@@ -21,50 +21,50 @@
         };
     };
     navbarFixed();
-	
-	
-	/*----------------------------------------------------*/
+
+
+    /*----------------------------------------------------*/
     /*  Parallax Effect js
     /*----------------------------------------------------*/
-	function parallaxEffect() {
-    	$('.bg-parallax').parallax();
-	}
-	parallaxEffect();
-	
-	
-	/*----------------------------------------------------*/
+    function parallaxEffect() {
+        $('.bg-parallax').parallax();
+    }
+    parallaxEffect();
+
+
+    /*----------------------------------------------------*/
     /*  Testimonials Slider
     /*----------------------------------------------------*/
-    function text_slider(){
-        if ( $('.blog_text_slider').length ){
+    function text_slider() {
+        if ($('.blog_text_slider').length) {
             $('.blog_text_slider').owlCarousel({
-                loop:true,
+                loop: true,
                 margin: 20,
                 items: 1,
                 nav: false,
                 autoplay: false,
                 smartSpeed: 1500,
-                dots:false, 
-				navContainer: '.blog_text_slider',
-                navText: ['<i class="lnr lnr-arrow-left"></i>','<i class="lnr lnr-arrow-right"></i>'],
+                dots: false,
+                navContainer: '.blog_text_slider',
+                navText: ['<i class="lnr lnr-arrow-left"></i>', '<i class="lnr lnr-arrow-right"></i>'],
             })
         }
     }
     text_slider();
-	
-	$('select').niceSelect();
-	
-	/*----------------------------------------------------*/
+
+    $('select').niceSelect();
+
+    /*----------------------------------------------------*/
     /*  Simple LightBox js
     /*----------------------------------------------------*/
     $('.imageGallery1 .light').simpleLightbox();
 
-	
-	/*----------------------------------------------------*/
+
+    /*----------------------------------------------------*/
     /*  Google map js
     /*----------------------------------------------------*/
-     
-    if ( $('#mapBox').length ){
+
+    if ($('#mapBox').length) {
         var $lat = $('#mapBox').data('lat');
         var $lon = $('#mapBox').data('lon');
         var $zoom = $('#mapBox').data('zoom');
@@ -73,16 +73,16 @@
         var $markerLat = $('#mapBox').data('mlat');
         var $markerLon = $('#mapBox').data('mlon');
         var map = new GMaps({
-        el: '#mapBox',
-        lat: $lat,
-        lng: $lon,
-        scrollwheel: false,
-        scaleControl: true,
-        streetViewControl: false,
-        panControl: true,
-        disableDoubleClickZoom: true,
-        mapTypeControl: false,
-        zoom: $zoom,
+            el: '#mapBox',
+            lat: $lat,
+            lng: $lon,
+            scrollwheel: false,
+            scaleControl: true,
+            streetViewControl: false,
+            panControl: true,
+            disableDoubleClickZoom: true,
+            mapTypeControl: false,
+            zoom: $zoom,
             styles: [
                 {
                     "featureType": "water",
@@ -270,6 +270,6 @@
             ]
         });
     }
-	
+
 
 })(jQuery)

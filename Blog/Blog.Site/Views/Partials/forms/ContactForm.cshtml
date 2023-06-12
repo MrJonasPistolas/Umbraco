@@ -1,0 +1,27 @@
+﻿@using Blog.Site.Controllers
+@using Umbraco.Cms.Web.Common;
+@model Blog.Common.Models.ContactFormViewModel
+@inject UmbracoHelper umbracoHelper
+
+@using (Html.BeginUmbracoForm<ContactFormController>(nameof(ContactFormController.Submit), FormMethod.Post, new { @class = "row contact_form" }))
+{
+    <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+            <input asp-for="Name" class="form-control" id="name" name="name" placeholder="@umbracoHelper.GetDictionaryValue("ContactForm.Placeholders.Name")">
+        </div>
+        <div class="form-group">
+            <input asp-for="Email" class="form-control" id="email" name="email" placeholder="@umbracoHelper.GetDictionaryValue("ContactForm.Placeholders.Email")">
+        </div>
+        <div class="form-group">
+            <input asp-for="Subject" class="form-control" id="subject" name="subject" placeholder="@umbracoHelper.GetDictionaryValue("ContactForm.Placeholders.Subject")">
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+            <textarea asp-for="Message" class="form-control" id="message" name="message" rows="5" placeholder="@umbracoHelper.GetDictionaryValue("ContactForm.Placeholders.Message")"></textarea>
+        </div>
+    </div>
+    <div class="col-md-12 text-right">
+        <button type="submit" value="submit" class="btn submit_btn">@umbracoHelper.GetDictionaryValue("ContactForm.Buttons.SendMessage")</button>
+    </div>
+}

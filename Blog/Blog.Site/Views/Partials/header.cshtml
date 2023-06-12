@@ -3,6 +3,7 @@
 @{
     var homePage = Umbraco.AssignedContentItem.AncestorOrSelf<HomePage>();
     var navigationItems = homePage.MainNavigation;
+    var currentUrl = Umbraco.AssignedContentItem.Url().ToLower();
 }
 
 <header class="header_area">
@@ -39,7 +40,7 @@
                                 }
                                 else
                                 {
-                                    <li class="nav-item active">
+                                    <li class="@(item.Link.Url.ToLower() == currentUrl ? "nav-item active" : "nav-item")">
                                         <a class="nav-link" href="@item.Link.Url" target="@item.Link.Target">@item.Link.Name</a>
                                     </li>
                                 }

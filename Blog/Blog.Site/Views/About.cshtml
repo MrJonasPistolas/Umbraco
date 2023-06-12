@@ -5,7 +5,6 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.About>
 @inject IUserService _userService;
 
-
 @{
 	var userCreator = _userService.GetUserById(Model.CreatorId);
 

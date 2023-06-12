@@ -1,0 +1,32 @@
+﻿@using Blog.Common.Models;
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Contact>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = "Master.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="contact_info">
+            <div class="info_item">
+                <i class="lnr lnr-home"></i>
+                <h6>@Model.TitleAddress</h6>
+                <p>@Model.DescriptionAddress</p>
+            </div>
+            <div class="info_item">
+                <i class="lnr lnr-phone-handset"></i>
+                <h6>@Model.TitlePhone</h6>
+                <p>@Model.DescriptionPhone</p>
+            </div>
+            <div class="info_item">
+                <i class="lnr lnr-envelope"></i>
+                <h6>@Model.TitleEmail</h6>
+                <p>@Model.DescriptionEmail</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-6">
+        @await Html.PartialAsync("~/Views/Partials/forms/ContactForm.cshtml", new ContactFormViewModel())
+    </div>
+</div>

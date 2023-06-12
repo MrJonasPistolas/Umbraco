@@ -1,0 +1,16 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var selection = Model.Ancestors().ToArray();
+}
+
+@if (selection.Length > 0)
+{
+    <div class="page_link">
+        @foreach (var item in selection.OrderBy(x => x.Level))
+        {
+            <a href="@item.Url()">@item.Name</a>
+        }
+        <a href="javascript:;">@Model.Name</a>
+    </div>
+}
