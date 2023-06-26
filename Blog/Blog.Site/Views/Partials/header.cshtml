@@ -24,7 +24,7 @@
                         <ul class="nav navbar-nav menu_nav">
                             @foreach (var item in navigationItems)
                             {
-                                if (item.ChildLinks != null && item.ChildLinks.Any()) 
+                                if (item.ChildLinks != null && item.ChildLinks.Any())
                                 {
                                     <li class="nav-item submenu dropdown">
                                         <a href="javascript:;" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@item.Title</a>
@@ -41,16 +41,18 @@
                                 else
                                 {
                                     <li class="@(item.Link.Url.ToLower() == currentUrl ? "nav-item active" : "nav-item")">
-                                        <a class="nav-link" href="@item.Link.Url" target="@item.Link.Target">@item.Link.Name</a>
+                                        <a class="nav-link" href="@item.Link.Url" target="@item.Link.Target">@item.Title</a>
                                     </li>
                                 }
                             }
                         </ul>
                     }
 
+                    @await Html.PartialAsync("~/Views/Partials/languages.cshtml")
+
                     @if (homePage.SocialMedia != null && homePage.SocialMedia.Any())
                     {
-                        <ul class="nav navbar-nav navbar-right header_social ml-auto">
+                        <ul class="nav navbar-nav navbar-right header_social">
                             @foreach (var link in homePage.SocialMedia)
                             {
                                 <li class="nav-item">

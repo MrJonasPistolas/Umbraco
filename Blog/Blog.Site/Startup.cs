@@ -1,3 +1,6 @@
+using Blog.Common.Interfaces;
+using Blog.Common.Services;
+
 namespace Blog.Site
 {
     public class Startup
@@ -34,6 +37,9 @@ namespace Blog.Site
                 .AddWebsite()
                 .AddComposers()
                 .Build();
+
+            // Custom Services
+            services.AddTransient<ISearchService, SearchService>();
         }
 
         /// <summary>

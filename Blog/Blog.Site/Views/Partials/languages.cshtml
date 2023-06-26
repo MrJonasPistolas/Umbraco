@@ -1,0 +1,28 @@
+﻿@using System.Globalization;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    // Get the Languages
+    var languages = Model.Root().Cultures;
+    var currentLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.NativeName.ToLower();
+}
+
+<div class="ml-auto" style="margin-right: 20px;">
+    <select asp-for="@currentLanguage" id="select-language">
+        @foreach (var (culture, infos) in languages)
+        {
+            var c = new CultureInfo(culture);
+            @if (c.NativeName.ToLower() == currentLanguage.ToLower())
+            {
+                <option value="@culture" data-url="@Model.Url(culture)" data-language="@Umbraco.GetDictionaryValue($"Master.Header.Languages.{culture}")" selected>@Umbraco.GetDictionaryValue($"Master.Header.Languages.{culture}")</option>
+            }
+            else
+            {
+                <option value="@culture" data-url="@Model.Url(culture)" data-language="@Umbraco.GetDictionaryValue($"Master.Header.Languages.{culture}")">@Umbraco.GetDictionaryValue($"Master.Header.Languages.{culture}")</option>
+            }
+        }
+    </select>
+    <script type="text/javascript">
+        var languages = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(languages)))
+    </script>
+</div>

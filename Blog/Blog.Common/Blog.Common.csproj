@@ -6,4 +6,10 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Umbraco.Cms.Core" Version="11.4.0" />
+    <PackageReference Include="Umbraco.Cms.Examine.Lucene" Version="11.4.0" />
+    <PackageReference Include="Umbraco.Cms.Web.Common" Version="11.4.0" />
+  </ItemGroup>
+
 </Project>

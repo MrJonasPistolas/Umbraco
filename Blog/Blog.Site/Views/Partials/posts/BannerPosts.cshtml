@@ -1,0 +1,43 @@
+﻿@using Blog.Common.Interfaces;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Web.Common;
+@inject ISearchService _searchService
+@inject UmbracoHelper _umbracoHelper
+
+@{
+    var content = _searchService.SearchPosts("post");
+}
+
+@if (content != null && content.Count() > 0)
+{
+    <div class="blog_text_slider owl-carousel">
+        @foreach (var model in content)
+        {
+            var contentPage = (ContentModels.ContentPage)model;
+            <div class="item">
+                <div class="blog_text">
+                    <div class="cat row">
+                        <div class="col-6 col-md-12">
+                            @if (contentPage.Tags != null && contentPage.Tags.Count() > 0)
+                            {
+                                foreach (var tag in contentPage.Tags)
+                                {
+                                    <a class="cat_btn" href="javascript:;">@tag</a>
+                                }
+                            }
+                        </div>
+                        <a href="javascript:;">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            @contentPage.CreateDate.ToString("MMM dd, yyyy")
+                        </a>
+                    </div>
+                    <a href="javascript:;">
+                        <h4>@contentPage.Title</h4>
+                    </a>
+                    <p>@(contentPage.Resume.Length >= 150 ? $"{contentPage.Resume.Substring(0, 150)}..." : $"{contentPage.Resume}")</p>
+                    <a class="blog_btn" href="@contentPage.Url()">@_umbracoHelper.GetDictionaryValue("Master.Banner.ReadMore")</a>
+                </div>
+            </div>
+        }
+    </div>
+}
