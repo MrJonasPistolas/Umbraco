@@ -1,0 +1,130 @@
+﻿@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Expenses.Common.Models.Authentication.Requests;
+@using Expenses.Site.SurfaceControllers;
+@using Umbraco.Cms.Web.Common.PublishedModels;
+
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.LoginPage>
+
+@{
+    Layout = "MasterUser.cshtml";
+
+    var loginModel = new LoginRequestModel();
+    loginModel.RedirectUrl = null;
+}
+
+<section class="login-block">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                @using (Html.BeginUmbracoForm<LoginController>("HandleLogin", new { RedirectUrl = loginModel.RedirectUrl }, new { novalidate = "novalidate", @class = "md-float-material form-material" }))
+                {
+                    <div class="text-center">
+                        <img src="@Model.SiteLogo.Url()" alt="@Model.SiteLogo.Name" height="36" />
+                    </div>
+                    <div class="auth-box card">
+                        <div class="card-block">
+                            <div class="row m-b-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-center txt-primary">Sign In</h3>
+                                </div>
+                            </div>
+
+                            <p class="text-muted text-center p-b-5">Sign in with your regular account</p>
+                            <div class="form-group form-primary">
+                                <input type="email" asp-for="@loginModel.Email" class="form-control" id="login-email" />
+                                <label asp-for="@loginModel.Email" class="float-label"></label>
+                                <span asp-validation-for="@loginModel.Email" class="text-danger" id="login-email-message"></span>
+                            </div>
+                            <div class="form-group form-primary">
+                                <input asp-for="@loginModel.Password" class="form-control" id="login-password" />
+                                <label asp-for="@loginModel.Password" class="float-label"></label>
+                                <span asp-validation-for="@loginModel.Password" class="text-danger" id="login-password-message"></span>
+                            </div>
+                            <div class="row m-t-25 text-left">
+                                <div class="col-12">
+                                    <div class="checkbox-fade fade-in-primary">
+                                        <label>
+                                            <input type="checkbox" value>
+                                            <span class="cr">
+                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                            </span>
+                                            <span class="text-inverse">Remember me</span>
+                                        </label>
+                                    </div>
+                                    <div class="forgot-phone text-right float-right">
+                                        <a href="auth-reset-password.html" class="text-right f-w-600">Forgot Password?</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">@Umbraco.GetDictionaryValue("LoginPage.Buttons.Submit")</button>
+                                </div>
+                            </div>
+                            <p class="text-inverse text-left">
+                                Don't have an account?
+                                <a href="auth-sign-up-social.html">
+                                    <b>Register here </b>
+                                </a>
+                                for free!
+                            </p>
+                        </div>
+                    </div>
+
+
+                    @*<div class="mb-3">
+                        <label asp-for="@loginModel.Email" class="form-label"></label>
+                        <input type="email" asp-for="@loginModel.Email" class="form-control form-control-sm" placeholder="@Umbraco.GetDictionaryValue("LoginPage.Placeholders.Email")" />
+                        <span asp-validation-for="@loginModel.Email" class="form-text text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="@loginModel.Password" class="form-label"></label>
+                        <input asp-for="@loginModel.Password" class="form-control form-control-sm" placeholder="@Umbraco.GetDictionaryValue("LoginPage.Placeholders.Password")" />
+                        <span asp-validation-for="@loginModel.Password" class="form-text text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn_1 full_width text-center">@Umbraco.GetDictionaryValue("LoginPage.Buttons.Submit")</button>*@
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="login-block">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4">
+                        <div class="white_box">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <img src="@Model.SiteLogo.Url()" alt="@Model.SiteLogo.Name" height="36" />
+                                    <br />
+                                    <br />
+                                    <h3>@Model.PageTitle</h3>
+                                </div>
+                            </div>
+                            @using (Html.BeginUmbracoForm<LoginController>("HandleLogin", new { RedirectUrl = loginModel.RedirectUrl }, new { novalidate = "novalidate" }))
+                            {
+                                <div class="mb-3">
+                                    <label asp-for="@loginModel.Email" class="form-label"></label>
+                                    <input type="email" asp-for="@loginModel.Email" class="form-control form-control-sm" placeholder="@Umbraco.GetDictionaryValue("LoginPage.Placeholders.Email")" />
+                                    <span asp-validation-for="@loginModel.Email" class="form-text text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="@loginModel.Password" class="form-label"></label>
+                                    <input asp-for="@loginModel.Password" class="form-control form-control-sm" placeholder="@Umbraco.GetDictionaryValue("LoginPage.Placeholders.Password")" />
+                                    <span asp-validation-for="@loginModel.Password" class="form-text text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn_1 full_width text-center">@Umbraco.GetDictionaryValue("LoginPage.Buttons.Submit")</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,22 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+	
+	#region Getting System Language
+	var language = Model.GetCultureFromDomains();
+	var lang = language.Split('-')[0];
+	#endregion
+}
+
+<!DOCTYPE html>
+<html lang="@lang">
+	<head>
+		@await Html.PartialAsync("~/Views/Partials/master/authentication/Metadata.cshtml")
+		@await Html.PartialAsync("~/Views/Partials/master/authentication/Styles.cshtml")
+	</head>
+	<body themebg-pattern="theme1">
+		@RenderBody()
+
+		@await Html.PartialAsync("~/Views/Partials/master/authentication/Scripts.cshtml")
+	</body>
+</html>
