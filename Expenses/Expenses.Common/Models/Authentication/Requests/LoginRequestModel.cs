@@ -17,6 +17,7 @@ namespace Expenses.Common.Models.Authentication.Requests
         [UmbracoStringLength(25, DictionaryKey = "LoginPage.Errors.Password.StringLength")]
         public string Password { get; set; } = null!;
 
+        [UmbracoDisplayName("LoginPage.DisplayNames.RememberMe")]
         public bool RememberMe { get; set; }
 
         public string? RedirectUrl { get; set; }
