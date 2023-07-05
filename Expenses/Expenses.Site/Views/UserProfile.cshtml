@@ -1,0 +1,314 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.UserProfile>
+
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Expenses.Common.Models.Authentication.Requests;
+@using Expenses.Site.SurfaceControllers;
+@using Umbraco.Cms.Core.Models;
+@using Umbraco.Cms.Core.PropertyEditors;
+@using Umbraco.Cms.Core.Security;
+@using Umbraco.Cms.Core.Services;
+@using Umbraco.Cms.Web.Common.PublishedModels;
+
+@inject IMemberManager memberManager
+@inject IDataTypeService dataTypeService
+
+@{
+    Layout = "Master.cshtml";
+
+    #region Get Current Member
+    var currentUser = await memberManager.GetCurrentMemberAsync();
+    IPublishedContent member = memberManager.AsPublishedMember(currentUser);
+    #endregion
+
+    #region Get PreValues
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    var dataType = dataTypeService.GetDataType("Member - Gender - Dropdown");
+    ValueListConfiguration prevalues = (ValueListConfiguration)dataType.Configuration;
+    foreach (ValueListConfiguration.ValueListItem item in prevalues.Items)
+    {
+        listItems.Add(new SelectListItem { Value = item.Value, Text = item.Value, Selected = (member.GetProperty("gender").GetValue() == item.Value) });
+    }
+    #endregion
+
+    #region Member Avatar
+    MediaWithCrops avatar = null;
+    string avatarUrl = string.Empty;
+    var avatarValue = member.GetProperty("avatar").GetValue();
+    if (avatarValue != null)
+    {
+        avatar = avatarValue as MediaWithCrops;
+        avatarUrl = avatar.Url();
+    }
+    else
+    {
+        var userImageMedia = Umbraco.MediaAtRoot().FirstOrDefault(f => f.Name.ToLower().Equals("user"));
+        avatarUrl = userImageMedia.Url();
+    }
+    #endregion
+
+    #region Member Banner
+    string bannerUrl = string.Empty;
+    var bannerValue = member.GetProperty("banner").GetValue();
+    if (bannerValue != null)
+    {
+        bannerUrl = (bannerValue as MediaWithCrops).Url();
+    }
+    else
+    {
+        bannerUrl = Model.Banner.Url();
+    }
+    #endregion
+
+    #region Member Birth Date
+    var birthDateValue = member.GetProperty("birthDate").GetValue();
+    DateTime birthDateDate = Convert.ToDateTime(birthDateValue.ToString());
+    #endregion
+
+    #region Profile Model
+    var profileUpdateRequestModel = new ProfileUpdateRequestModel();
+
+    profileUpdateRequestModel.Address = member.GetProperty("address").GetValue().ToString();
+    profileUpdateRequestModel.BirthDate = birthDateDate;
+    profileUpdateRequestModel.Fullname = member.GetProperty("fullName").GetValue().ToString();
+    profileUpdateRequestModel.Gender = member.GetProperty("gender").GetValue().ToString();
+    profileUpdateRequestModel.Mobile = member.GetProperty("mobile").GetValue().ToString();
+    profileUpdateRequestModel.RedirectUrl = null;
+    #endregion
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="cover-profile">
+            <div class="profile-bg-img">
+                <img class="profile-bg-img img-fluid" src="@bannerUrl" alt="bg-img">
+                <div class="card-block user-info">
+                    <div class="col-md-12">
+                        <div class="media-left">
+                            <a href="javascript:;" class="profile-image">
+                                <img class="user-img img-square" src="@avatarUrl" alt="user-img" width="100" height="100">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-header-text">@Umbraco.GetDictionaryValue("UserProfile.Texts.AboutMe").ToUpperInvariant()</h5>
+                <button id="edit-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light pull-right" data-edit-mode="false" data-view-mode="true" data-edit-text="Edit" data-view-text="Close">
+                    Edit
+                </button>
+            </div>
+            <div class="card-block">
+                <div class="view-info">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="general-info">
+                                <div class="row">
+                                    <div class="col-lg-12 col-xl-6">
+                                        <div class="table-responsive">
+                                            <table class="table m-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            @Umbraco.GetDictionaryValue("UserProfile.Texts.FullName")
+                                                        </th>
+                                                        <td>
+                                                            @member.GetProperty("fullName").GetValue()
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            @Umbraco.GetDictionaryValue("UserProfile.Texts.Gender")
+                                                        </th>
+                                                        <td>@member.GetProperty("gender").GetValue()</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            @Umbraco.GetDictionaryValue("UserProfile.Texts.BirthDate")
+                                                        </th>
+                                                        <td>
+                                                            @(birthDateDate.ToString("dd MMMM yyyy"))
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-xl-6">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            @Umbraco.GetDictionaryValue("UserProfile.Texts.Location")
+                                                        </th>
+                                                        <td>
+                                                            @member.GetProperty("address").GetValue()
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            @Umbraco.GetDictionaryValue("UserProfile.Texts.Email")
+                                                        </th>
+                                                        <td>
+                                                            <a href="javascript:;">
+                                                                <span>@member.GetProperty("email").GetValue()</span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            @Umbraco.GetDictionaryValue("UserProfile.Texts.Mobile")
+                                                        </th>
+                                                        <td>
+                                                            @member.GetProperty("mobile").GetValue()
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="edit-info">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @using (Html.BeginUmbracoForm<UserProfileController>("HandleUpdateProfile", new { RedirectUrl = profileUpdateRequestModel.RedirectUrl }, new { novalidate = "novalidate" }))
+                            {
+                                <div class="general-info">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-xl-6">
+                                            <div class="table-responsive">
+                                                <table class="table m-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                @Umbraco.GetDictionaryValue("UserProfile.Texts.FullName")
+                                                            </th>
+                                                            <td>
+                                                                <input type="text" asp-for="@profileUpdateRequestModel.Fullname" class="form-control" id="profile-fullname" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                @Umbraco.GetDictionaryValue("UserProfile.Texts.Gender")
+                                                            </th>
+                                                            <td>
+                                                                <select asp-for="@profileUpdateRequestModel.Gender" asp-items="@listItems" class="form-control" id="profile-gender"></select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                @Umbraco.GetDictionaryValue("UserProfile.Texts.BirthDate")
+                                                            </th>
+                                                            <td>
+                                                                <input asp-for="@profileUpdateRequestModel.BirthDate" class="form-control" id="profile-birthdate" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-xl-6">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                @Umbraco.GetDictionaryValue("UserProfile.Texts.Location")
+                                                            </th>
+                                                            <td>
+                                                                @member.GetProperty("address").GetValue()
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                @Umbraco.GetDictionaryValue("UserProfile.Texts.Email")
+                                                            </th>
+                                                            <td>
+                                                                <a href="javascript:;">
+                                                                    <span>@member.GetProperty("email").GetValue()</span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                @Umbraco.GetDictionaryValue("UserProfile.Texts.Mobile")
+                                                            </th>
+                                                            <td>
+                                                                @member.GetProperty("mobile").GetValue()
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <a href="#!" class="btn btn-primary waves-effect waves-light m-r-20">Save</a>
+                                        <a href="#!" id="edit-cancel" class="btn btn-default waves-effect">Cancel</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section JavaScript
+{
+    <script type="text/javascript" src="/js/datedropper-javascript.js"></script>
+
+    <script type="text/javascript">
+        var birthdate = '@(birthDateDate.ToString("yyyy/MM/dd"))';
+
+        $('.edit-info').hide();
+        $('#edit-btn').on('click', function () {
+            var data = $(this).data();
+            if (data.viewMode) {
+                $(this).text(data.viewText);
+                $(this).data('viewMode', false);
+                $(this).data('editMode', true);
+                $('.view-info').hide();
+                $('.edit-info').show();
+            } else {
+                $(this).text(data.editText);
+                $(this).data('viewMode', true);
+                $(this).data('editMode', false);
+                $('.view-info').show();
+                $('.edit-info').hide();
+            }
+        });
+
+        new dateDropper({
+            "selector": "#profile-birthdate",
+            "format": "dd/MM/y",
+            "lang": "pt",
+            "showArrowsOnHover": false,
+            "overlay": true,
+            "expandable": true,
+            "expandedOnly": false,
+            "doubleView": false,
+            "startFromMonday": false,
+            "jump": "10",
+            "defaultDate": birthdate,
+            "range": false,
+            "disabledWeekDays": "0,6",
+            "autoFill": true,
+            "loopAll": true
+        });
+    </script>
+}

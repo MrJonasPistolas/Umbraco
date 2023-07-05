@@ -1,0 +1,16 @@
+﻿@inherits UmbracoViewPage<IHeaderProperties>
+
+<div class="page-header-title">
+    @if (!string.IsNullOrEmpty(Model.PageIcon))
+    {
+        var className = $"feather {Model.PageIcon} bg-c-blue";
+        <i class="@className"></i>
+    }
+    <div class="d-inline">
+        <h5>@Model.PageTitle</h5>
+        @if (!string.IsNullOrEmpty(Model.PageDescription))
+        {
+            <span>@Model.PageDescription</span>
+        }
+    </div>
+</div>

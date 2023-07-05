@@ -1,0 +1,33 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var current = Umbraco.AssignedContentItem;
+    var breadcrumbs = Umbraco.AssignedContentItem.AncestorsOrSelf();
+}
+
+<div class="page-header-breadcrumb">
+    <ul class="breadcrumb breadcrumb-title">
+        @foreach (var item in breadcrumbs.Reverse())
+        {
+            <li class="breadcrumb-item">
+                @if (item.Url().ToLower() == current.Url().ToLower())
+                {
+                    <span>@(item.Value<string>("pageTitle"))</span>
+                }
+                else
+                {
+                    <a href="@item.Url()">
+                        @if (item.Url() == "/")
+                        {
+                            <i class="feather icon-home"></i>
+                        }
+                        else
+                        {
+                            <span>@(item.Value<string>("pageTitle"))</span>
+                        }
+                    </a>
+                }
+            </li>
+        }
+    </ul>
+</div>
