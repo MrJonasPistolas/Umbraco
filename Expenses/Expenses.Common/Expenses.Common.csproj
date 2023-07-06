@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Authentication\Responses\" />
+    <Folder Include="Models\IncomeCategories\Responses\" />
   </ItemGroup>
 
   <ItemGroup>
