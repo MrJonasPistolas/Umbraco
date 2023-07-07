@@ -11711,3 +11711,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table
     .pcoded[layout-type=dark] .bg-c-purple {
         background: #536dfe
     }
+
+.exm-modal-primary {
+    color: #fff;
+    background: #4680ff;
+}

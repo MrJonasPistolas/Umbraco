@@ -1,6 +1,8 @@
 ﻿using Expenses.Common.DataTables;
 using Expenses.Common.Entities.Schemas;
+using Expenses.Common.Models.IncomeCategories.Responses;
 using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Core.Security;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Infrastructure.Scoping;
 using Umbraco.Cms.Web.Common.Filters;
@@ -13,15 +15,18 @@ namespace Expenses.Site.Controllers
         #region > Properties <
         private readonly IScopeProvider _scopeProvider;
         private readonly IMemberService _memberService;
+        private readonly IMemberManager _memberManager;
         #endregion
 
         #region > Constructors <
         public IncomeCategoryController(
             IScopeProvider scopeProvider,
-            IMemberService memberService)
+            IMemberService memberService,
+            IMemberManager memberManager)
         {
             _scopeProvider = scopeProvider;
             _memberService = memberService;
+            _memberManager = memberManager;
         }
         #endregion
 
@@ -30,6 +35,14 @@ namespace Expenses.Site.Controllers
         [Route("Table")]
         public async Task<IActionResult> LoadTabledAsync([FromBody] DataTablesParameters param)
         {
+            #region Check the user permissions
+            MemberIdentityUser currentMember = await _memberManager.GetUserAsync(HttpContext.User);
+            var administratorExists = _memberService.GetMembersByGroup("Administrators").Any(m => m.Key == currentMember.Key);
+            var contributorExists = _memberService.GetMembersByGroup("Contributors").Any(m => m.Key == currentMember.Key);
+            #endregion
+
+            List<IncomeCategoriesResponse> responseList = new List<IncomeCategoriesResponse>();
+
             var draw = param.draw;
             var row = param.start;
             var rowPerPage = param.length;
@@ -39,10 +52,10 @@ namespace Expenses.Site.Controllers
             var searchValue = param.search.value;
 
             using var scope = _scopeProvider.CreateScope();
-            
+
             #region Search
             string searchQuery = string.Empty;
-            if (param.search.value != "") 
+            if (param.search.value != "")
             {
                 searchQuery = $" AND (Name LIKE '%{searchValue}%')";
             }
@@ -60,12 +73,25 @@ namespace Expenses.Site.Controllers
 
             #region Fetch the Data
             var queryResults = await scope.Database.FetchAsync<IncomeCategorySchema>($"SELECT * FROM IncomeCategories WHERE 1 {searchQuery} ORDER BY {columnName} {columnSortOrder} LIMIT {rowPerPage} OFFSET {row}");
+            foreach (var item in queryResults)
+            {
+                var member = _memberService.GetById(item.MemberId);
+                responseList.Add(new IncomeCategoriesResponse
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    MemberId = member.Id,
+                    Member = member.Name,
+                    CanDelete = administratorExists || contributorExists,
+                    CanEdit = administratorExists || contributorExists
+                });
+            }
             scope.Complete();
             #endregion
 
             dynamic response = new
             {
-                Data = queryResults,
+                Data = responseList,
                 Draw = draw.ToString(),
                 RecordsFiltered = totalRecordsWithFilter,
                 RecordsTotal = totalRecords,
